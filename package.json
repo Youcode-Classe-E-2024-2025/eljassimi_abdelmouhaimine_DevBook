@@ -1,0 +1,26 @@
+{
+  "name": "devbook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Youcode-Classe-E-2024-2025/Ibrahim_Nidam_DevBook.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Youcode-Classe-E-2024-2025/Ibrahim_Nidam_DevBook/issues"
+  },
+  "homepage": "https://github.com/Youcode-Classe-E-2024-2025/Ibrahim_Nidam_DevBook#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.0"
+  }
+}
