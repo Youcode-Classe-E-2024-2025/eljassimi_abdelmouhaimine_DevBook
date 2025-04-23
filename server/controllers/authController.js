@@ -2,18 +2,18 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const secretKey = 'duazidgSAHIH6576';
+const secretKey = 'SECRET_KEY';
 
 exports.register = (req, res) => {
-    const {name, email, password} = req.body;
+    const {username, email, password} = req.body;
 
     bcrypt.hash(password,12,(err,hashedPass) => {
-        if(err) return res.status(500).json({error: 'error hash pass'});
+        if(err) return res.status(500).json({error: 'PASSOWRD HASHING ERROR'});
 
-        User.create(name, email, hashedPass,(err,result) => {
-            if(err) return res.status(500).json({error: 'user creation failed'});
+        User.create(username, email, hashedPass,(err,result) => {
+            if(err) return res.status(500).json({error: 'USER CREATION ERROR'});
 
-            res.json({message: 'user registered'});
+            res.json({message: 'USER CREATED SUCCESSFLY'});
         });
     });
 };
@@ -23,19 +23,19 @@ exports.login = (req, res) => {
 
     User.findByemail(email, (err,result) => {
         if(err || result.length === 0){
-            return res.status(401).json({error: 'invalid pass or email method'});
+            return res.status(401).json({error: 'INVALID EMAIL OR PASSWORD'});
         }
 
         const user = result[0];
 
-        bcrypt.compare(password, user.password, (err, isMatch) => {
+        bcrypt.compare(password, user.password_hash, (err, isMatch) => {
             if(err || !isMatch) {
-                return res.status(401).json({error : 'invalid pass or email other', user,isMatch});
+                return res.status(401).json({error : 'INVALID EMAIL OR PASSWORD', user,isMatch});
             }
 
             const token = jwt.sign({userId: user.id}, secretKey, {expiresIn: '1h'});
 
-            res.json({message : 'logged in',token} , token);
+            res.json({message : 'LOGGING SUCCESS : ',token} , token);
         });
     });
 };

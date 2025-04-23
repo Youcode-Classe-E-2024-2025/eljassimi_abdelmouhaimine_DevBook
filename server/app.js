@@ -7,14 +7,12 @@ const app = express();
 const PORT = 3000;
 
 const authRoutes = require('./routes/authRoutes');
-const protectedRoutes = require('./routes/protectedRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 
 app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/auth', authRoutes);
-app.use('/api', protectedRoutes);
 app.use('/books', bookRoutes);
 
 app.get('/', (req,res)=>{

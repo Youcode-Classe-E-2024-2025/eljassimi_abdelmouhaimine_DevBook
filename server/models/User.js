@@ -3,7 +3,7 @@ const connection = require('../../config/db');
 
 class User {
     static create(name, email, hashedPass,callback){
-        const sql = 'INSERT INTO users (name, email, password) VALUES (?,?,?)';
+        const sql = 'INSERT INTO users (username, email, password_hash) VALUES (?,?,?)';
         connection.query(sql,[name, email, hashedPass], callback);
     }
 
