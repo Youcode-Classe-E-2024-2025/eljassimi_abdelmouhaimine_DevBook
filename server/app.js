@@ -1,12 +1,15 @@
 const express = require('express');
-const cors = require('cors');  // Une seule importation
+const cors = require('cors');
 const connection = require('../config/db');
 const app = express();
 const PORT = 3000;
 const authRoutes = require('./routes/authRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  credentials: true
+}));
 
 app.use(express.json());
 app.use('/auth', authRoutes);

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBook - Tableau de bord</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-blue-900 min-h-screen">
+    <nav class="bg-gray-900 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="flex items-center text-2xl font-bold text-white">
+                            <i class="fas fa-book-open text-blue-400 mr-2"></i>
+                            Dev<span class="text-blue-400">Book</span>
+                        </h1>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="hidden md:block">
+                        <div class="ml-4 flex items-center md:ml-6">
+                            <span class="text-gray-300 mr-4">Bienvenue, <span id="username-display" class="font-medium text-blue-400"></span></span>
+                            <button id="logout-button" class="text-gray-300 hover:text-white p-2 rounded-md">
+                                <i class="fas fa-sign-out-alt mr-1"></i> Déconnexion
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Tabs -->
+        <div class="mb-4 border-b border-gray-700">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" role="tablist">
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg text-blue-400 border-blue-500 active" id="books-tab" data-tab="books" type="button" role="tab">
+                        <i class="fas fa-book mr-2"></i> Tous les livres
+                    </button>
+                </li>
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-500" id="add-book-tab" data-tab="add-book" type="button" role="tab">
+                        <i class="fas fa-plus-circle mr-2"></i> Ajouter un livre
+                    </button>
+                </li>
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-300 hover:border-gray-500" id="my-loans-tab" data-tab="my-loans" type="button" role="tab">
+                        <i class="fas fa-bookmark mr-2"></i> Mes emprunts
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Books Tab -->
+        <div id="books-content" class="tab-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Bibliothèque technique</h2>
+                <div class="relative">
+                    <input type="text" id="search-books" placeholder="Rechercher un livre..." class="bg-gray-800 bg-opacity-50 w-64 pl-10 pr-3 py-2 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="books-container">
+
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg flex flex-col">
+                    <div class="p-4 flex-grow">
+                        <h3 class="text-xl font-bold text-white mb-2">Chargement des livres...</h3>
+                        <p class="text-gray-400">Veuillez patienter...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Book Tab -->
+        <div id="add-book-content" class="tab-content hidden">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-2xl font-bold text-white mb-6">Ajouter un nouveau livre</h2>
+                
+                <form id="add-book-form" class="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-lg">
+                    <div class="mb-4">
+                        <label for="title" class="block text-sm font-medium text-gray-300 mb-1">Titre du livre</label>
+                        <input type="text" id="title" name="title" required class="bg-gray-700 bg-opacity-50 w-full p-3 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="author" class="block text-sm font-medium text-gray-300 mb-1">Auteur</label>
+                        <input type="text" id="author" name="author" required class="bg-gray-700 bg-opacity-50 w-full p-3 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="description" class="block text-sm font-medium text-gray-300 mb-1">Description</label>
+                        <textarea id="description" name="description" rows="4" class="bg-gray-700 bg-opacity-50 w-full p-3 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="category" class="block text-sm font-medium text-gray-300 mb-1">Catégorie</label>
+                        <select id="category" name="category" required class="bg-gray-700 bg-opacity-50 w-full p-3 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Sélectionner une catégorie</option>
+                            <option value="development">Développement</option>
+                            <option value="database">Base de données</option>
+                            <option value="devops">DevOps</option>
+                            <option value="security">Sécurité</option>
+                            <option value="ai">Intelligence Artificielle</option>
+                            <option value="mobile">Développement Mobile</option>
+                            <option value="web">Développement Web</option>
+                            <option value="other">Autre</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="isbn" class="block text-sm font-medium text-gray-300 mb-1">ISBN</label>
+                        <input type="text" id="isbn" name="isbn" required class="bg-gray-700 bg-opacity-50 w-full p-3 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150">
+                            <i class="fas fa-plus-circle mr-2"></i> Ajouter le livre
+                        </button>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <p class="text-sm text-red-400" id="add-book-result"></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- My Loans Tab -->
+        <div id="my-loans-content" class="tab-content hidden">
+            <h2 class="text-2xl font-bold text-white mb-6">Mes livres empruntés</h2>
+            
+            <div class="overflow-hidden shadow-md rounded-lg">
+                <table class="min-w-full divide-y divide-gray-700">
+                    <thead class="bg-gray-800">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Titre</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Auteur</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Date d'emprunt</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loans-container" class="bg-gray-800 bg-opacity-50 divide-y divide-gray-700">
+                        <!-- Loans will be loaded here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('username-display').textContent = username;
+            }
+            
+            loadBooks();
+            loadLoans();
+            
+            const tabs = document.querySelectorAll('[data-tab]');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.add('hidden');
+                    });
+
+                    tabs.forEach(t => {
+                        t.classList.remove('text-blue-400', 'border-blue-500');
+                        t.classList.add('hover:text-gray-300', 'hover:border-gray-500', 'border-transparent');
+                    });
+                    
+                    const targetId = this.getAttribute('data-tab');
+                    document.getElementById(`${targetId}-content`).classList.remove('hidden');
+                    
+                    this.classList.remove('hover:text-gray-300', 'hover:border-gray-500', 'border-transparent');
+                    this.classList.add('text-blue-400', 'border-blue-500');
+                });
+            });
+            
+            // Logout
+            document.getElementById('logout-button').addEventListener('click', function() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('username');
+                window.location.href = 'index.html';
+            });
+            
+            document.getElementById('add-book-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const title = document.getElementById('title').value;
+                const author = document.getElementById('author').value;
+                const description = document.getElementById('description').value;
+                const category = document.getElementById('category').value;
+                const isbn = document.getElementById('isbn').value;
+                
+                try {
+                    const response = await fetch('http://localhost:3000/books/add', {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ title, author, description, category, isbn })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        document.getElementById('add-book-result').textContent = 'Livre ajouté avec succès!';
+                        document.getElementById('add-book-result').classList.remove('text-red-400');
+                        document.getElementById('add-book-result').classList.add('text-green-400');
+                        document.getElementById('add-book-form').reset();
+                        
+                        // Reload books in the background
+                        loadBooks();
+                    } else {
+                        document.getElementById('add-book-result').textContent = data.error || 'Erreur lors de l\'ajout du livre';
+                        document.getElementById('add-book-result').classList.remove('text-green-400');
+                        document.getElementById('add-book-result').classList.add('text-red-400');
+                    }
+                } catch (error) {
+                    document.getElementById('add-book-result').textContent = 'Erreur de connexion';
+                    document.getElementById('add-book-result').classList.add('text-red-400');
+                }
+            });
+            
+            // Search books functionality
+            document.getElementById('search-books').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const books = document.querySelectorAll('#books-container .book-card');
+                
+                books.forEach(book => {
+                    const title = book.querySelector('.book-title').textContent.toLowerCase();
+                    const author = book.querySelector('.book-author').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || author.includes(searchTerm)) {
+                        book.style.display = '';
+                    } else {
+                        book.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        async function loadBooks() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:3000/books', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const container = document.getElementById('books-container');
+                    container.innerHTML = '';
+                    
+                    if (data.length === 0) {
+                        container.innerHTML = `
+                            <div class="col-span-full text-center py-8">
+                                <p class="text-gray-400">Aucun livre disponible. Soyez le premier à en ajouter un!</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    data.forEach(book => {
+                        const bookCard = document.createElement('div');
+                        bookCard.className = 'book-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg flex flex-col';
+                        
+                        let categoryColor = 'bg-gray-600';
+                        switch(book.category) {
+                            case 'development': categoryColor = 'bg-blue-600'; break;
+                            case 'database': categoryColor = 'bg-green-600'; break;
+                            case 'devops': categoryColor = 'bg-purple-600'; break;
+                            case 'security': categoryColor = 'bg-red-600'; break;
+                            case 'ai': categoryColor = 'bg-yellow-600'; break;
+                            case 'mobile': categoryColor = 'bg-indigo-600'; break;
+                            case 'web': categoryColor = 'bg-pink-600'; break;
+                        }
+                        
+                        bookCard.innerHTML = `
+                            <div class="p-4 flex-grow">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="text-xl font-bold text-white book-title">${book.title}</h3>
+                                    <span class="text-xs ${categoryColor} text-white px-2 py-1 rounded">${book.category}</span>
+                                </div>
+                                <p class="text-gray-400 mb-2 book-author">par ${book.author}</p>
+                                <p class="text-gray-300 mb-4">${book.description || 'Aucune description disponible'}</p>
+                                <div class="text-sm text-gray-400">ISBN: ${book.isbn}</div>
+                            </div>
+                            <div class="bg-gray-700 p-3 flex justify-end">
+                                <button class="loan-button ${book.available ? '' : 'hidden'} bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded" data-book-id="${book.id}">
+                                    <i class="fas fa-bookmark mr-1"></i> Emprunter
+                                </button>
+                                <span class="${book.available ? 'hidden' : ''} text-gray-400 text-sm py-1 px-3">
+                                    <i class="fas fa-clock mr-1"></i> Non disponible
+                                </span>
+                            </div>
+                        `;
+                        
+                        container.appendChild(bookCard);
+                    });
+                    
+                    document.querySelectorAll('.loan-button').forEach(button => {
+                        button.addEventListener('click', async function() {
+                            const bookId = this.getAttribute('data-book-id');
+                            await loanBook(bookId, this);
+                        });
+                    });
+                } else {
+                    const error = await response.json();
+                    console.error('Failed to load books:', error);
+                }
+            } catch (error) {
+                console.error('Error loading books:', error);
+            }
+        }
+        
+        // Load user's loans
+        async function loadLoans() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:3000/books/getloans', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const container = document.getElementById('loans-container');
+                    container.innerHTML = '';
+                    
+                    if (data.length === 0) {
+                        container.innerHTML = `
+                            <tr>
+                                <td colspan="4" class="px-6 py-4 text-center text-gray-400">
+                                    Vous n'avez pas encore emprunté de livres.
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    data.forEach(loan => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-white">${loan.title}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">${loan.author}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">${new Date(loan.loan_date).toLocaleDateString()}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <button class="return-button bg-green-600 hover:bg-green-700 text-white text-xs py-1 px-2 rounded" data-loan-id="${loan.id}">
+                                    <i class="fas fa-undo mr-1"></i> Retourner
+                                </button>
+                            </td>
+                        `;
+                        
+                        container.appendChild(row);
+                    });
+                    
+                    // Add event listeners for return buttons
+                    document.querySelectorAll('.return-button').forEach(button => {
+                        button.addEventListener('click', async function() {
+                            const loanId = this.getAttribute('data-loan-id');
+                            await returnBook(loanId, this);
+                        });
+                    });
+                } else {
+                    const error = await response.json();
+                    console.error('Failed to load loans:', error);
+                }
+            } catch (error) {
+                console.error('Error loading loans:', error);
+            }
+        }
+        
+        // Loan a book
+        async function loanBook(bookId, buttonElement) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:3000/books/loan/${bookId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    // Hide loan button and show unavailable text
+                    buttonElement.classList.add('hidden');
+                    buttonElement.parentNode.querySelector('span').classList.remove('hidden');
+                    
+                    // Reload loans in the background
+                    loadLoans();
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Erreur lors de l\'emprunt du livre');
+                }
+            } catch (error) {
+                console.error('Error loaning book:', error);
+                alert('Erreur de connexion');
+            }
+        }
+        
+        // Return a book
+        async function returnBook(bookId, buttonElement) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:3000/books/return/${bookId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    // Remove the row from the loans table
+                    buttonElement.closest('tr').remove();
+                    
+                    // Check if loans table is empty
+                    const loansContainer = document.getElementById('loans-container');
+                    if (loansContainer.children.length === 0) {
+                        loansContainer.innerHTML = `
+                            <tr>
+                                <td colspan="4" class="px-6 py-4 text-center text-gray-400">
+                                    Vous n'avez pas encore emprunté de livres.
+                                </td>
+                            </tr>
+                        `;
+                    }
+                    
+                    // Reload books in the background
+                    loadBooks();
+                } else {
+                    const error = await response.json();
+                    alert(error.message || 'Erreur lors du retour du livre');
+                }
+            } catch (error) {
+                console.error('Error returning book:', error);
+                alert('Erreur de connexion');
+            }
+        }
+    </script>
+</body>
+</html>

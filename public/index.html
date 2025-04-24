@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Données reçues:', data);
                 localStorage.setItem('token',data.token);
                 document.getElementById('login-result').innerText = data.message;
-                window.location.href = '/dashboard.html';
+                window.location.href = '/public/dashboard.html';
             } else {
                 const errorMessage = await response.text();
                 console.log('Erreur reçue:', errorMessage);
