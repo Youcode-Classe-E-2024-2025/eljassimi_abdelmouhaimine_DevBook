@@ -103,22 +103,9 @@
                         <label for="category" class="block text-sm font-medium text-gray-300 mb-1">Catégorie</label>
                         <select id="category" name="category" required class="bg-gray-700 bg-opacity-50 w-full p-3 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             <option value="">Sélectionner une catégorie</option>
-                            <option value="development">Développement</option>
-                            <option value="database">Base de données</option>
-                            <option value="devops">DevOps</option>
-                            <option value="security">Sécurité</option>
-                            <option value="ai">Intelligence Artificielle</option>
-                            <option value="mobile">Développement Mobile</option>
-                            <option value="web">Développement Web</option>
-                            <option value="other">Autre</option>
+                            <option value="1">Développement</option>
                         </select>
                     </div>
-                    
-                    <div class="mb-6">
-                        <label for="isbn" class="block text-sm font-medium text-gray-300 mb-1">ISBN</label>
-                        <input type="text" id="isbn" name="isbn" required class="bg-gray-700 bg-opacity-50 w-full p-3 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    
                     <div>
                         <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150">
                             <i class="fas fa-plus-circle mr-2"></i> Ajouter le livre
@@ -147,7 +134,6 @@
                         </tr>
                     </thead>
                     <tbody id="loans-container" class="bg-gray-800 bg-opacity-50 divide-y divide-gray-700">
-                        <!-- Loans will be loaded here dynamically -->
                     </tbody>
                 </table>
             </div>
@@ -204,7 +190,7 @@
                 const author = document.getElementById('author').value;
                 const description = document.getElementById('description').value;
                 const category = document.getElementById('category').value;
-                const isbn = document.getElementById('isbn').value;
+
                 
                 try {
                     const response = await fetch('http://localhost:3000/books/add', {
@@ -213,7 +199,7 @@
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`
                         },
-                        body: JSON.stringify({ title, author, description, category, isbn })
+                        body: JSON.stringify({ title, author, description, category })
                     });
                     
                     const data = await response.json();
@@ -223,11 +209,10 @@
                         document.getElementById('add-book-result').classList.remove('text-red-400');
                         document.getElementById('add-book-result').classList.add('text-green-400');
                         document.getElementById('add-book-form').reset();
-                        
-                        // Reload books in the background
+
                         loadBooks();
                     } else {
-                        document.getElementById('add-book-result').textContent = data.error || 'Erreur lors de l\'ajout du livre';
+                        document.getElementById('add-book-result').textContent = data.error || 'Erreur lors de ajout du livre';
                         document.getElementById('add-book-result').classList.remove('text-green-400');
                         document.getElementById('add-book-result').classList.add('text-red-400');
                     }
@@ -258,6 +243,8 @@
         async function loadBooks() {
             try {
                 const token = localStorage.getItem('token');
+                console.log(token);
+                
                 const response = await fetch('http://localhost:3000/books', {
                     method: 'GET',
                     headers: {
@@ -267,6 +254,7 @@
                 
                 if (response.ok) {
                     const data = await response.json();
+                    console.log("Daaataaaa : ",data);
                     const container = document.getElementById('books-container');
                     container.innerHTML = '';
                     
@@ -283,32 +271,20 @@
                         const bookCard = document.createElement('div');
                         bookCard.className = 'book-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg flex flex-col';
                         
-                        let categoryColor = 'bg-gray-600';
-                        switch(book.category) {
-                            case 'development': categoryColor = 'bg-blue-600'; break;
-                            case 'database': categoryColor = 'bg-green-600'; break;
-                            case 'devops': categoryColor = 'bg-purple-600'; break;
-                            case 'security': categoryColor = 'bg-red-600'; break;
-                            case 'ai': categoryColor = 'bg-yellow-600'; break;
-                            case 'mobile': categoryColor = 'bg-indigo-600'; break;
-                            case 'web': categoryColor = 'bg-pink-600'; break;
-                        }
-                        
                         bookCard.innerHTML = `
                             <div class="p-4 flex-grow">
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="text-xl font-bold text-white book-title">${book.title}</h3>
-                                    <span class="text-xs ${categoryColor} text-white px-2 py-1 rounded">${book.category}</span>
+                                    <span class="text-xs bg-gray-600 text-white px-2 py-1 rounded">${book.category}</span>
                                 </div>
                                 <p class="text-gray-400 mb-2 book-author">par ${book.author}</p>
                                 <p class="text-gray-300 mb-4">${book.description || 'Aucune description disponible'}</p>
-                                <div class="text-sm text-gray-400">ISBN: ${book.isbn}</div>
                             </div>
                             <div class="bg-gray-700 p-3 flex justify-end">
-                                <button class="loan-button ${book.available ? '' : 'hidden'} bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded" data-book-id="${book.id}">
+                                <button class="loan-button ${book.status ? '' : 'hidden'} bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded" data-book-id="${book.id}">
                                     <i class="fas fa-bookmark mr-1"></i> Emprunter
                                 </button>
-                                <span class="${book.available ? 'hidden' : ''} text-gray-400 text-sm py-1 px-3">
+                                <span class="${book.status ? 'hidden' : ''} text-gray-400 text-sm py-1 px-3">
                                     <i class="fas fa-clock mr-1"></i> Non disponible
                                 </span>
                             </div>
