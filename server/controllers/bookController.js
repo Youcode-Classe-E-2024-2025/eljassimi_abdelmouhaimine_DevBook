@@ -18,8 +18,10 @@ exports.addBook = (req, res) => {
 };
 
 exports.loanBook = (req, res) => {
+    console.log('hhhhhhhhhhhhhhhhhhhhh');
     const { id } = req.params;
     const userId = req.userId;
+    console.log("book id : ",id, "user id : ", userId);
 
     Book.isloaned(id, (err, result) => {
         if (err) return res.status(500).json({ error: 'Error during loan check' });
@@ -28,7 +30,9 @@ exports.loanBook = (req, res) => {
             return res.status(404).json({ error: 'Book not found' });
         }
 
-        if (result[0].is_loaned) {
+        console.log("Book status:", result[0]);
+
+        if (result[0].status != 'Disponible') {
             return res.status(400).json({ message: 'Book already loaned' });
         }
 

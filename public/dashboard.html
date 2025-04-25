@@ -281,7 +281,7 @@
                                 <p class="text-gray-300 mb-4">${book.description || 'Aucune description disponible'}</p>
                             </div>
                             <div class="bg-gray-700 p-3 flex justify-end">
-                                <button class="loan-button ${book.status ? '' : 'hidden'} bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded" data-book-id="${book.id}">
+                                <button class="loan-button ${book.status ? '' : 'hidden'} bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded" data-book-id="${book.book_id}">
                                     <i class="fas fa-bookmark mr-1"></i> Emprunter
                                 </button>
                                 <span class="${book.status ? 'hidden' : ''} text-gray-400 text-sm py-1 px-3">
@@ -296,6 +296,7 @@
                     document.querySelectorAll('.loan-button').forEach(button => {
                         button.addEventListener('click', async function() {
                             const bookId = this.getAttribute('data-book-id');
+                            console.log("boook id : ",bookId);
                             await loanBook(bookId, this);
                         });
                     });
@@ -367,7 +368,7 @@
             }
         }
         
-        // Loan a book
+
         async function loanBook(bookId, buttonElement) {
             try {
                 const token = localStorage.getItem('token');
@@ -376,14 +377,10 @@
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
-                });
-                
+                });                
                 if (response.ok) {
-                    // Hide loan button and show unavailable text
                     buttonElement.classList.add('hidden');
                     buttonElement.parentNode.querySelector('span').classList.remove('hidden');
-                    
-                    // Reload loans in the background
                     loadLoans();
                 } else {
                     const error = await response.json();
@@ -395,7 +392,6 @@
             }
         }
         
-        // Return a book
         async function returnBook(bookId, buttonElement) {
             try {
                 const token = localStorage.getItem('token');

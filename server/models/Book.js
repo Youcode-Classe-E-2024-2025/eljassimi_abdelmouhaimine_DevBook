@@ -12,18 +12,24 @@ class Book{
     }
 
     static loan(id, user_id, callback){
-        const sql = 'UPDATE books SET is_loaned = TRUE, user_id = ? WHERE id = ?';
-        connection.query(sql, [user_id, id], (err, result) => {
+        const sql = 'UPDATE books SET status = indisponible WHERE id = ?';
+        connection.query(sql, [id], (err, result) => {
             if(err) return callback(err);
 
-            const loanSQL = 'INSERT INTO user_loans (user_id, book_id) VALUE (?,?)';
+            const loanSQL = 'INSERT INTO borrowings (user_id, book_id) VALUE (?,?)';
             connection.query(loanSQL, [user_id, id], callback);
         });
     }
 
     static isloaned(id, callback){
-        const sql = 'SELECT is_loaned FROM books where id = ?';
-        connection.query(sql, [id], callback);
+        const sql = 'SELECT status FROM books where book_id = ?';
+        connection.query(sql, [id], (err, result) => {
+            if (err) {
+                console.error("SQL Error:", err);
+                return callback(err, null);
+            }
+            callback(null, result);
+        });
     }
 
     static return(id,user_id,callback){
